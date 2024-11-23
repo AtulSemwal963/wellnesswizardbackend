@@ -21,7 +21,7 @@ app.post('/start', async (req, res) => {
         const prompt = `
             You are Wellness Wizard, an AI assistant helping identify possible health conditions based on the user's symptoms. 
             Always respond strictly in plain JSON format without any additional characters, backticks, or markdown formatting. 
-            Format your response like this: {"question":"", "options":["", ""]}.
+            Format your response like this: {"question":"", "options":["", ""]}. Try to sum up your diagnosis session in 10 questions or less, if you can't come to consensus the disease, just list down whatever you think it is with the response format:{"answer":""}
         `;
 
         // Send the initial prompt to the model
