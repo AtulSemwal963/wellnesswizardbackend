@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wellness Wizard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    .header {
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 24px;
+      color: #333;
+    }
+    .question {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .options li {
+      margin: 10px 0;
+    }
+    .options button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 300px;
+      display: inline-block;
+    }
+    .options button:hover {
+      background-color: #0056b3;
+    }
+    .start-button {
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .start-button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Wellness Wizard</h1>
+      <p>Your personal health assistant</p>
+    </div>
+    <div id="content">
+      <button class="start-button" id="startButton">Start</button>
+    </div>
+  </div>
+
+  <script>
+    const startEndpoint = 'http://localhost:3000/quickcheckup/start';
+    const responseEndpoint = 'http://localhost:3000/quickcheckup/response';
+
+    const contentDiv = document.getElementById('content');
+
+    // Function to render the question and options
+    function renderQuestion(question, options) {
+      // Clear existing content
+      contentDiv.innerHTML = '';
+
+      // Display the question
+      const questionElement = document.createElement('div');
+      questionElement.className = 'question';
+      questionElement.textContent = question;
+      contentDiv.appendChild(questionElement);
+
+      // Display the options as buttons
+      const optionsList = document.createElement('ul');
+      optionsList.className = 'options';
+
+      options.forEach(option => {
+        const optionItem = document.createElement('li');
+        const optionButton = document.createElement('button');
+        optionButton.textContent = option;
+        optionButton.onclick = () => handleResponse(option); // Handle click event
+        optionItem.appendChild(optionButton);
+        optionsList.appendChild(optionItem);
+      });
+
+      contentDiv.appendChild(optionsList);
+    }
+
+    // Function to start the wizard
+    async function startWizard() {
+      try {
+        const response = await fetch(startEndpoint, { method: 'POST' });
+        const data = await response.json();
+        renderQuestion(data.question, data.options);
+      } catch (error) {
+        console.error('Error starting the wizard:', error);
+        contentDiv.innerHTML = '<p>There was an error starting the wizard. Please try again later.</p>';
+      }
+    }
+
+    // Function to handle user response
+    async function handleResponse(userResponse) {
+      try {
+        // Send the response to the server
+        const response = await fetch(responseEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ response: userResponse }),
+        });
+
+        const data = await response.json();
+
+        // Check if the response contains an answer (final diagnosis)
+        if (data.answer) {
+          contentDiv.innerHTML = `<p><strong>Diagnosis:</strong> ${data.answer}</p>`;
+        } else {
+          // Otherwise, render the next question
+          renderQuestion(data.question, data.options);
+        }
+      } catch (error) {
+        console.error('Error handling response:', error);
+        contentDiv.innerHTML = '<p>There was an error processing your response. Please try again later.</p>';
+      }
+    }
+
+    // Add event listener to start button
+    document.getElementById('startButton').addEventListener('click', startWizard);
+  </script>
+</body>
+</html>
