@@ -64,6 +64,7 @@ app.post('/response', async (req, res) => {
         const followUpPrompt = `
             The user responded with: ${userResponse}. Based on this response, you should ask the next relevant question. 
             The question should be focused on narrowing down the possible health conditions related to this symptom.
+            If you have guessed the disease, return it instead of asking another question exactly in this format:{"answer":"You are likley having one of the following condition/s:"}.
             Provide the next question in JSON format: {"question": "<question>", "options": ["option 1", "option 2", "I don't know"]}.
         `;
 
