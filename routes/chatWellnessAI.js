@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 // Google Generative AI setup
-const API_KEY = "AIzaSyABd73vQj7YV3ob7CThufrbMnMoRqhIoqI";  // Replace with your actual API key
+const API_KEY = "AIzaSyBQvXfNiuyXS4KmP8tJNrVlkVHK97OjMKw";  // Replace with your actual API key
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-exp-1114" });
 const chat = model.startChat({ history: [] }); 
