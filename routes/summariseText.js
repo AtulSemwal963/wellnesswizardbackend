@@ -5,7 +5,7 @@ const cors = require('cors');
 app.use(cors());
 
 // Your Google Gemini API key (replace with your actual key)
-const API_KEY = 'AIzaSyABd73vQj7YV3ob7CThufrbMnMoRqhIoqI';
+const API_KEY = 'AIzaSyBQvXfNiuyXS4KmP8tJNrVlkVHK97OjMKw';
 
 // Initialize the Google Generative AI client
 const genAI = new GoogleGenerativeAI(API_KEY);
